@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCAMCORE — Official Home of Exit Liquidity</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #050505;
+    --bg: #080a08;
+    --green: #00ff41;
+    --green-dim: #00cc33;
+    --green-glow: rgba(0,255,65,0.15);
+    --red: #ff2222;
+    --red-dim: #cc1111;
+    --red-glow: rgba(255,34,34,0.15);
+    --gray: #333;
+    --muted: #555;
+    --white: #e8e8e8;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Bebas Neue', sans-serif;
+    --body: 'Space Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--body);
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* SCANLINE EFFECT */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* MOVING GRID BACKGROUND */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,65,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,65,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridMove 20s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes gridMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 40px 40px; }
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    background: rgba(8,10,8,0.9);
+    border-bottom: 1px solid rgba(0,255,65,0.15);
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-logo {
+    font-family: var(--display);
+    font-size: 28px;
+    color: var(--green);
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px var(--green);
+  }
+
+  .nav-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--red);
+    border: 1px solid var(--red);
+    padding: 4px 10px;
+    animation: blink 1.5s infinite;
+    letter-spacing: 2px;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* SECTIONS */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ===================== HERO ===================== */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 140px;
+    max-width: 100%;
+    padding-left: 8vw;
+    padding-right: 8vw;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    opacity: 0.7;
+  }
+
+  .hero-headline {
+    font-family: var(--display);
+    font-size: clamp(80px, 14vw, 200px);
+    color: var(--white);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    position: relative;
+    animation: glitchMain 4s infinite;
+  }
+
+  .hero-headline::before,
+  .hero-headline::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    font-family: var(--display);
+    font-size: inherit;
+    line-height: inherit;
+    color: var(--white);
+  }
+
+  .hero-headline::before {
+    color: var(--green);
+    animation: glitchTop 4s infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 40%, 0 40%);
+  }
+
+  .hero-headline::after {
+    color: var(--red);
+    animation: glitchBot 4s infinite;
+    clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+  }
+
+  @keyframes glitchMain {
+    0%, 90%, 100% { transform: translate(0); }
+    91% { transform: translate(-3px, 1px); }
+    92% { transform: translate(3px, -1px); }
+    93% { transform: translate(-1px, 2px); }
+    94% { transform: translate(1px, -2px); }
+    95% { transform: translate(0); }
+  }
+
+  @keyframes glitchTop {
+    0%, 90%, 100% { transform: translate(0); opacity: 0; }
+    91% { transform: translate(-6px, 0); opacity: 0.8; }
+    93% { transform: translate(6px, 0); opacity: 0.8; }
+    95% { transform: translate(0); opacity: 0; }
+  }
+
+  @keyframes glitchBot {
+    0%, 88%, 100% { transform: translate(0); opacity: 0; }
+    89% { transform: translate(6px, 0); opacity: 0.8; }
+    91% { transform: translate(-6px, 0); opacity: 0.8; }
+    93% { transform: translate(0); opacity: 0; }
+  }
+
+  .hero-sub {
+    font-family: var(--display);
+    font-size: clamp(24px, 4vw, 52px);
+    color: var(--green);
+    margin-top: 10px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 30px var(--green);
+  }
+
+  .hero-copy {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: #888;
+    max-width: 600px;
+    margin-top: 30px;
+    line-height: 1.9;
+  }
+
+  .hero-copy span { color: var(--green); }
+
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    margin-top: 50px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 16px 36px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .btn:hover::before { opacity: 0.1; }
+
+  .btn:hover {
+    transform: translate(-2px, -2px);
+    filter: brightness(1.2);
+  }
+
+  .btn:active { transform: translate(2px, 2px); }
+
+  .btn-primary {
+    background: var(--green);
+    color: var(--black);
+    box-shadow: 0 0 30px rgba(0,255,65,0.4), inset 0 0 0 1px rgba(0,255,65,0.5);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--green);
+    border: 1px solid var(--green);
+    box-shadow: 0 0 20px rgba(0,255,65,0.1);
+  }
+
+  .btn-red {
+    background: transparent;
+    color: var(--red);
+    border: 1px solid var(--red);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: #666;
+    border: 1px solid #333;
+  }
+
+  .btn-ghost:hover { color: var(--green); border-color: var(--green); }
+
+  /* GLITCH HOVER */
+  .btn:hover {
+    animation: btnGlitch 0.3s steps(1) infinite;
+  }
+
+  @keyframes btnGlitch {
+    0%, 100% { clip-path: none; }
+    25% { clip-path: inset(2px 0 0 0); transform: translate(-2px, -2px); }
+    50% { clip-path: inset(0 0 2px 0); transform: translate(2px, -2px); }
+    75% { clip-path: none; transform: translate(-2px, 2px); }
+  }
+
+  /* ===================== SCAM INDEX ===================== */
+  #scam-index {
+    border-top: 1px solid var(--gray);
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--green);
+    opacity: 0.6;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(40px, 6vw, 80px);
+    letter-spacing: 3px;
+    color: var(--white);
+    margin-bottom: 60px;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .metric-card {
+    border: 1px solid var(--gray);
+    background: rgba(0,255,65,0.02);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .metric-card:hover {
+    border-color: var(--green);
+    background: var(--green-glow);
+  }
+
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--green);
+    opacity: 0.3;
+  }
+
+  .metric-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #555;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .metric-value {
+    font-family: var(--display);
+    font-size: 48px;
+    color: var(--green);
+    letter-spacing: 2px;
+    animation: flicker 3s infinite;
+    text-shadow: 0 0 20px var(--green);
+  }
+
+  .metric-value.red {
+    color: var(--red);
+    text-shadow: 0 0 20px var(--red);
+    animation: flickerRed 2.5s infinite;
+  }
+
+  .metric-value.yellow {
+    color: #ffcc00;
+    text-shadow: 0 0 20px #ffcc00;
+    animation: flickerYellow 3.5s infinite;
+  }
+
+  @keyframes flicker {
+    0%, 95%, 100% { opacity: 1; }
+    96% { opacity: 0.1; }
+    97% { opacity: 1; }
+    98% { opacity: 0.3; }
+    99% { opacity: 1; }
+  }
+
+  @keyframes flickerRed {
+    0%, 90%, 100% { opacity: 1; }
+    91% { opacity: 0.05; }
+    92% { opacity: 0.9; }
+    93% { opacity: 0.2; }
+    94% { opacity: 1; }
+  }
+
+  @keyframes flickerYellow {
+    0%, 93%, 100% { opacity: 1; }
+    94% { opacity: 0.4; }
+    95% { opacity: 1; }
+    96% { opacity: 0.1; }
+    97% { opacity: 1; }
+  }
+
+  .metric-status {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #444;
+    margin-top: 8px;
+  }
+
+  /* ===================== WHAT IS SCAMCORE ===================== */
+  #what-is {
+    border-top: 1px solid var(--gray);
+  }
+
+  .big-copy {
+    font-family: var(--body);
+    font-size: clamp(16px, 2vw, 22px);
+    color: #aaa;
+    line-height: 1.9;
+    max-width: 780px;
+    border-left: 3px solid var(--green);
+    padding-left: 40px;
+  }
+
+  .big-copy strong {
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  /* ===================== MANIFESTO ===================== */
+  #manifesto {
+    border-top: 1px solid var(--gray);
+    background: rgba(255,34,34,0.02);
+  }
+
+  .manifesto-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .manifesto-list li {
+    font-family: var(--display);
+    font-size: clamp(30px, 5vw, 65px);
+    letter-spacing: 2px;
+    color: #222;
+    padding: 20px 0;
+    border-bottom: 1px solid #1a1a1a;
+    transition: all 0.3s;
+    cursor: default;
+    position: relative;
+    padding-left: 0;
+  }
+
+  .manifesto-list li::before {
+    content: '//';
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--red);
+    margin-right: 20px;
+    opacity: 0.5;
+  }
+
+  .manifesto-list li:hover {
+    color: var(--white);
+    padding-left: 20px;
+    border-bottom-color: var(--red);
+  }
+
+  .manifesto-list li:hover::before {
+    opacity: 1;
+  }
+
+  /* ===================== TOKEN ===================== */
+  #token {
+    border-top: 1px solid var(--gray);
+  }
+
+  .token-ticker {
+    font-family: var(--display);
+    font-size: clamp(60px, 12vw, 160px);
+    color: var(--green);
+    letter-spacing: 5px;
+    text-shadow: 0 0 60px rgba(0,255,65,0.3);
+    line-height: 1;
+    margin-bottom: 30px;
+  }
+
+  .token-copy {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: #777;
+    max-width: 600px;
+    line-height: 1.9;
+    margin-bottom: 50px;
+  }
+
+  .warning-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .warning-box {
+    border: 1px solid var(--red);
+    background: rgba(255,34,34,0.04);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--red);
+    text-transform: uppercase;
+  }
+
+  .warning-box::before {
+    content: '⚠';
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  /* ===================== ROADMAP ===================== */
+  #roadmap {
+    border-top: 1px solid var(--gray);
+  }
+
+  .roadmap-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .roadmap-list::before {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--green), var(--red));
+    opacity: 0.3;
+  }
+
+  .roadmap-item {
+    padding: 36px 36px 36px 80px;
+    position: relative;
+    border-bottom: 1px solid #111;
+    transition: background 0.3s;
+  }
+
+  .roadmap-item:hover {
+    background: rgba(0,255,65,0.02);
+  }
+
+  .roadmap-item::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 44px;
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--green);
+    background: var(--bg);
+    transform: rotate(45deg);
+  }
+
+  .roadmap-phase {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--green);
+    opacity: 0.6;
+    margin-bottom: 8px;
+  }
+
+  .roadmap-title {
+    font-family: var(--display);
+    font-size: 36px;
+    color: var(--white);
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .roadmap-copy {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #555;
+    line-height: 1.8;
+  }
+
+  /* ===================== INTERACTIVE ===================== */
+  #interactive {
+    border-top: 1px solid var(--gray);
+  }
+
+  .interactive-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  @media (max-width: 700px) {
+    .interactive-grid { grid-template-columns: 1fr; }
+  }
+
+  .ape-card {
+    border: 1px solid var(--gray);
+    padding: 40px;
+    text-align: center;
+  }
+
+  .ape-question {
+    font-family: var(--display);
+    font-size: 42px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 30px;
+  }
+
+  .ape-answer {
+    font-family: var(--mono);
+    font-size: 14px;
+    min-height: 60px;
+    padding: 20px;
+    background: rgba(0,255,65,0.04);
+    border: 1px solid var(--gray);
+    color: var(--green);
+    line-height: 1.6;
+    margin-top: 24px;
+    transition: all 0.3s;
+    display: none;
+  }
+
+  .ape-answer.visible { display: block; }
+
+  .ape-answer.red-answer {
+    color: var(--red);
+    background: rgba(255,34,34,0.04);
+    border-color: var(--red);
+  }
+
+  .portfolio-card {
+    border: 1px solid var(--gray);
+    padding: 40px;
+  }
+
+  .portfolio-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #444;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+  }
+
+  .portfolio-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid #111;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  .portfolio-row .label { color: #555; }
+
+  .portfolio-row .val-up { color: #888; }
+  .portfolio-row .val-down { color: var(--red); animation: flickerRed 2s infinite; }
+  .portfolio-row .val-diamond { color: var(--green); }
+
+  /* ===================== COMMUNITY ===================== */
+  #community {
+    border-top: 1px solid var(--gray);
+    text-align: center;
+  }
+
+  #community .section-title {
+    text-align: center;
+  }
+
+  .community-copy {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 50px;
+    text-align: center;
+  }
+
+  .community-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* ===================== FOOTER ===================== */
+  footer {
+    border-top: 1px solid var(--gray);
+    padding: 60px 8vw;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-logo {
+    font-family: var(--display);
+    font-size: 48px;
+    color: #1a1a1a;
+    letter-spacing: 4px;
+    margin-bottom: 30px;
+  }
+
+  .footer-disclaimer {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #333;
+    line-height: 2;
+    max-width: 800px;
+  }
+
+  .footer-disclaimer a { color: #444; text-decoration: none; }
+
+  /* ===================== TERMINAL TICKER ===================== */
+  .terminal-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(8,10,8,0.95);
+    border-top: 1px solid rgba(0,255,65,0.1);
+    padding: 8px 20px;
+    overflow: hidden;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--green);
+    white-space: nowrap;
+  }
+
+  .ticker-inner {
+    display: inline-block;
+    animation: ticker 30s linear infinite;
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .ticker-item {
+    display: inline;
+    margin: 0 40px;
+  }
+
+  .ticker-red { color: var(--red); }
+  .ticker-dim { color: #333; }
+
+  /* ===================== DIVIDER ===================== */
+  .section-divider {
+    width: 60px;
+    height: 2px;
+    background: var(--green);
+    margin-bottom: 50px;
+    opacity: 0.5;
+  }
+
+  /* ===================== RESPONSIVE ===================== */
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    section { padding: 80px 24px; }
+    #hero { padding-left: 24px; padding-right: 24px; }
+    footer { padding: 40px 24px; }
+    .roadmap-list::before { left: 16px; }
+    .roadmap-item { padding-left: 50px; }
+    .roadmap-item::before { left: 10px; }
+  }
+
+  /* NOISE OVERLAY */
+  .noise {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* CORNER DECORATION */
+  .corner-tl, .corner-br {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    opacity: 0.4;
+  }
+  .corner-tl {
+    top: 20px; left: 20px;
+    border-top: 1px solid var(--green);
+    border-left: 1px solid var(--green);
+  }
+  .corner-br {
+    bottom: 20px; right: 20px;
+    border-bottom: 1px solid var(--green);
+    border-right: 1px solid var(--green);
+  }
+
+  /* HERO SCROLLDOWN */
+  .scroll-hint {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #333;
+    letter-spacing: 3px;
+    margin-top: 80px;
+    animation: scrollBounce 2s ease-in-out infinite;
+  }
+
+  .scroll-hint::before {
+    content: '▼ ';
+    color: var(--green);
+    opacity: 0.5;
+  }
+
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50% { transform: translateY(8px); opacity: 1; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- NOISE + GRID -->
+<div class="grid-bg"></div>
+<div class="noise"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SCAMCORE</div>
+  <div style="display:flex; gap:20px; align-items:center;">
+    <span class="nav-badge">⚠ NOT FINANCIAL ADVICE</span>
+    <a href="https://x.com/scamcore" target="_blank" rel="noopener" style="display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px; color:var(--green); border:1px solid rgba(0,255,65,0.3); padding:8px 14px; text-decoration:none; letter-spacing:2px; transition:all 0.2s;" onmouseover="this.style.borderColor='var(--green)';this.style.background='rgba(0,255,65,0.08)'" onmouseout="this.style.borderColor='rgba(0,255,65,0.3)';this.style.background='transparent'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.736-8.849L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      @SCAMCORE
+    </a>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<div id="hero">
+  <div class="hero-eyebrow">// SYSTEM ONLINE — NODE COUNT: UNKNOWN</div>
+  <h1 class="hero-headline" data-text="SCAMCORE">SCAMCORE</h1>
+  <div class="hero-sub">The official home of exit liquidity.</div>
+  <p class="hero-copy">
+    We knew. We still bought.<br>
+    Built on <span>vibes</span>, powered by <span>cope</span>, and <span>audited by nobody</span>.
+  </p>
+  <div class="hero-buttons">
+    <a href="#token" class="btn btn-primary">Ape In</a>
+    <a href="#what-is" class="btn btn-secondary">I Understand Nothing</a>
+  </div>
+  <div class="scroll-hint">SCROLL TO LOSE MORE MONEY</div>
+</div>
+
+<!-- ===================== SCAM INDEX ===================== -->
+<section id="scam-index">
+  <div class="section-label">// LIVE DASHBOARD — DATA UNVERIFIED</div>
+  <h2 class="section-title">SCAM INDEX</h2>
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-label">SCAM INDEX</div>
+      <div class="metric-value" id="m1">96/100</div>
+      <div class="metric-status">↑ UP FROM YESTERDAY</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">LIQUIDITY</div>
+      <div class="metric-value yellow">FRAGILE</div>
+      <div class="metric-status">HANDLE WITH DELUSION</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">HOLDER IQ</div>
+      <div class="metric-value red">QUESTIONABLE</div>
+      <div class="metric-status">DECLINING FAST</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">DEV STATUS</div>
+      <div class="metric-value" style="font-size:36px;">TYPING…</div>
+      <div class="metric-status" style="color: var(--green); font-size:10px;" id="typing-status">████████░░ 80%</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">UTILITY</div>
+      <div class="metric-value yellow">PENDING</div>
+      <div class="metric-status">EST. ARRIVAL: NEVER</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">ROADMAP</div>
+      <div class="metric-value red">DELUSIONAL</div>
+      <div class="metric-status">CHECKED BY NOBODY</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WHAT IS SCAMCORE ===================== -->
+<section id="what-is">
+  <div class="section-label">// DEFINITION.EXE</div>
+  <h2 class="section-title">WHAT IS<br>SCAMCORE?</h2>
+  <div class="section-divider"></div>
+  <p class="big-copy">
+    Scamcore is the culture of <strong>buying first</strong> and <strong>understanding never</strong>.
+    It is not about fundamentals. It is not about technology.
+    It is about belief, cope, and the sacred art of becoming
+    <strong>someone else's exit liquidity</strong>.
+  </p>
+</section>
+
+<!-- ===================== MANIFESTO ===================== -->
+<section id="manifesto">
+  <div class="section-label">// MANIFESTO.TXT — READ CAREFULLY</div>
+  <h2 class="section-title">DEGEN<br>MANIFESTO</h2>
+  <ul class="manifesto-list">
+    <li>We do not research.</li>
+    <li>We do not learn.</li>
+    <li>We rotate losses.</li>
+    <li>We blame whales.</li>
+    <li>We call it strategy.</li>
+    <li>We are not early. We are trapped.</li>
+  </ul>
+</section>
+
+<!-- ===================== TOKEN ===================== -->
+<section id="token">
+  <div class="section-label">// TOKEN DETAILS — PROCEED WITH ZERO EXPECTATIONS</div>
+  <div class="token-ticker">$SCAMCORE</div>
+  <p class="token-copy">
+    A meme token for degenerates, gamblers, professional copers, and people
+    who think red candles are just discounted conviction.
+  </p>
+  <div class="warning-grid">
+    <div class="warning-box">No promises</div>
+    <div class="warning-box">No utility</div>
+    <div class="warning-box">No financial advice</div>
+    <div class="warning-box">No refunds</div>
+    <div class="warning-box">Only vibes</div>
+  </div>
+</section>
+
+<!-- ===================== ROADMAP ===================== -->
+<section id="roadmap">
+  <div class="section-label">// ROADMAP.MD — SUBJECT TO CHANGE (IT WILL CHANGE)</div>
+  <h2 class="section-title">THE ROADMAP</h2>
+  <div class="roadmap-list">
+    <div class="roadmap-item">
+      <div class="roadmap-phase">PHASE 1</div>
+      <div class="roadmap-title">LAUNCH</div>
+      <div class="roadmap-copy">Everyone says we are early.</div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-phase">PHASE 2</div>
+      <div class="roadmap-title">PUMP</div>
+      <div class="roadmap-copy">Screenshots. Euphoria. Zero risk management.</div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-phase">PHASE 3</div>
+      <div class="roadmap-title">CONFUSION</div>
+      <div class="roadmap-copy">Nobody knows what is happening.</div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-phase">PHASE 4</div>
+      <div class="roadmap-title">COPE</div>
+      <div class="roadmap-copy">Actually, this was always a long-term hold.</div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-phase">PHASE 5</div>
+      <div class="roadmap-title">NARRATIVE DOMINANCE</div>
+      <div class="roadmap-copy">We rebrand the losses as culture.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== INTERACTIVE ===================== -->
+<section id="interactive">
+  <div class="section-label">// DECISION ENGINE — POWERED BY COPE</div>
+  <h2 class="section-title">TOOLS FOR<br>THE BROKEN</h2>
+  <div class="interactive-grid">
+    <!-- APE BUTTON -->
+    <div class="ape-card" style="position:relative;">
+      <div class="corner-tl"></div>
+      <div class="corner-br"></div>
+      <div class="ape-question">SHOULD I APE?</div>
+      <p style="font-family: var(--mono); font-size:11px; color:#444;">
+        Our AI has analyzed the charts.<br>Here is its verdict:
+      </p>
+      <button class="btn btn-primary" onclick="getAdvice()" style="margin-top:20px; width:100%;">
+        ASK THE ORACLE
+      </button>
+      <div class="ape-answer" id="ape-answer"></div>
+    </div>
+
+    <!-- PORTFOLIO TRACKER -->
+    <div class="portfolio-card" style="position:relative;">
+      <div class="corner-tl"></div>
+      <div class="corner-br"></div>
+      <div class="portfolio-title">// PORTFOLIO_TRACKER.EXE</div>
+      <div class="portfolio-row">
+        <span class="label">INITIAL INVESTMENT</span>
+        <span class="val-up">$1,000.00</span>
+      </div>
+      <div class="portfolio-row">
+        <span class="label">CURRENT VALUE</span>
+        <span class="val-down" id="current-val">$73.00</span>
+      </div>
+      <div class="portfolio-row">
+        <span class="label">CHANGE</span>
+        <span class="val-down">-92.7% ↓</span>
+      </div>
+      <div class="portfolio-row">
+        <span class="label">STATUS</span>
+        <span class="val-diamond">💎 DIAMOND HANDS</span>
+      </div>
+      <div class="portfolio-row">
+        <span class="label">MENTAL STATE</span>
+        <span class="val-down">DETERIORATING</span>
+      </div>
+      <div class="portfolio-row">
+        <span class="label">SELL?</span>
+        <span class="val-diamond">NEVER. EVER.</span>
+      </div>
+      <div style="margin-top:24px; font-family:var(--mono); font-size:10px; color:#222; line-height:2;">
+        &gt; "This is fine."<br>
+        &gt; "It'll recover."<br>
+        &gt; "I'm early."
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMMUNITY ===================== -->
+<section id="community">
+  <div class="section-label" style="text-align:center;">// COMMUNITY.JOIN — WARNING: NO ESCAPE</div>
+  <h2 class="section-title">JOIN THE<br>CULT OF COPE</h2>
+  <p class="community-copy">
+    Post memes. Farm engagement. Pretend it is strategy.
+  </p>
+  <div class="community-buttons">
+    <a href="#" class="btn btn-secondary">Follow on X</a>
+    <a href="#" class="btn btn-ghost">Join Telegram</a>
+    <a href="#" class="btn btn-red">Read the Totally Real Whitepaper</a>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="footer-logo">SCAMCORE</div>
+  <p class="footer-disclaimer">
+    SCAMCORE is satire and entertainment. This is not financial advice.
+    No promises, no guarantees, no refunds.
+    SCAMCORE is not affiliated with Elon Musk, Sam Altman, OpenAI, X, xAI,
+    or any real company, person, or organization. Participate at your own risk.<br><br>
+    © 2025 SCAMCORE. All losses reserved. Built on vibes. Powered by cope.
+    Any resemblance to a real financial product is purely coincidental and somewhat the point.
+  </p>
+</footer>
+
+<!-- TERMINAL TICKER -->
+<div class="terminal-bar">
+  <div class="ticker-inner">
+    <span class="ticker-item">$SCAMCORE ▼ -94.2%</span>
+    <span class="ticker-item ticker-red">⚠ NOT FINANCIAL ADVICE</span>
+    <span class="ticker-item">HOLDER COUNT: 12 (all trapped)</span>
+    <span class="ticker-item ticker-red">DEV: STILL TYPING</span>
+    <span class="ticker-item">AUDIT: PENDING SINCE INCEPTION</span>
+    <span class="ticker-item ticker-red">LIQUIDITY: FRAGILE</span>
+    <span class="ticker-item">ROADMAP: DELUSIONAL</span>
+    <span class="ticker-item ticker-red">EXIT LIQUIDITY STATUS: YOU</span>
+    <span class="ticker-item">COPE RESERVES: UNLIMITED</span>
+    <span class="ticker-item ticker-red">⚠ SATIRE. THIS IS SATIRE.</span>
+    <span class="ticker-item">$SCAMCORE ▼ -94.2%</span>
+    <span class="ticker-item ticker-red">⚠ NOT FINANCIAL ADVICE</span>
+    <span class="ticker-item">HOLDER COUNT: 12 (all trapped)</span>
+    <span class="ticker-item ticker-red">DEV: STILL TYPING</span>
+    <span class="ticker-item">AUDIT: PENDING SINCE INCEPTION</span>
+    <span class="ticker-item ticker-red">LIQUIDITY: FRAGILE</span>
+    <span class="ticker-item">ROADMAP: DELUSIONAL</span>
+    <span class="ticker-item ticker-red">EXIT LIQUIDITY STATUS: YOU</span>
+    <span class="ticker-item">COPE RESERVES: UNLIMITED</span>
+    <span class="ticker-item ticker-red">⚠ SATIRE. THIS IS SATIRE.</span>
+  </div>
+</div>
+
+<script>
+  const apeAnswers = [
+    { text: "YES. Terrible idea.", red: false },
+    { text: "NO. You'll regret not buying.", red: true },
+    { text: "TOO LATE. You are exit liquidity.", red: true },
+    { text: "ASK AGAIN AFTER THE PUMP.", red: false },
+    { text: "Your risk management has left the chat.", red: true },
+  ];
+
+  function getAdvice() {
+    const el = document.getElementById('ape-answer');
+    const pick = apeAnswers[Math.floor(Math.random() * apeAnswers.length)];
+    el.textContent = '> ' + pick.text;
+    el.className = 'ape-answer visible' + (pick.red ? ' red-answer' : '');
+    el.style.animation = 'none';
+    el.offsetHeight;
+    el.style.animation = 'flicker 0.5s ease';
+  }
+
+  // Fluctuate current portfolio value
+  let base = 73;
+  setInterval(() => {
+    const el = document.getElementById('current-val');
+    const jitter = (Math.random() - 0.52) * 2;
+    base = Math.max(0.01, base + jitter);
+    el.textContent = '$' + base.toFixed(2);
+  }, 1800);
+
+  // Animate typing status
+  const typingFrames = [
+    '██░░░░░░░░ 20%',
+    '████░░░░░░ 40%',
+    '██████░░░░ 60%',
+    '████████░░ 80%',
+    '██████████ 100%',
+    '░░░░░░░░░░ 0%',
+  ];
+  let tf = 0;
+  setInterval(() => {
+    document.getElementById('typing-status').textContent = typingFrames[tf % typingFrames.length];
+    tf++;
+  }, 700);
+
+  // Subtle glitch on scroll
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const now = window.scrollY;
+    if (Math.abs(now - lastScroll) > 200) {
+      document.body.style.filter = 'hue-rotate(5deg)';
+      setTimeout(() => { document.body.style.filter = ''; }, 80);
+      lastScroll = now;
+    }
+  });
+</script>
+</body>
+</html>
